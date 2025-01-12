@@ -1,70 +1,145 @@
-# Getting Started with Create React App
+##架構圖
++-------------------+        +-------------------+
+|                   |        |                   |
+|   前端 (Frontend) |        |   後端 (Backend)  |
+|                   |        |                   |
+| - index.html      |        | - index.js        |
+| - app.js          |        |                   |
+|                   |        |                   |
++---------+---------+        +---------+---------+
+          |                            |
+          |                            |
+          |                            |
+          |                            |
+          |                            |
+          |                            |
+          |                            |
+          |                            |
++---------v---------+        +---------v---------+
+|                   |        |                   |
+|   使用者 (User)   |        |   資料庫 (Database)|
+|                   |        |                   |
+|                   |        | - MongoDB         |
+|                   |        |                   |
++-------------------+        +-------------------+
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+##流程圖
+[使用者]
+    |
+    v
+[在網頁上輸入訂單資訊，點擊 "Place Order" 按鈕]
+    |
+    v
+[前端 (app.js) 發送 POST 請求至 /orders]
+    |
+    v
+[後端 (index.js) 接收請求，將訂單儲存至 MongoDB]
+    |
+    v
+[使用者點擊查詢按鈕]
+    |
+    v
+[前端 (app.js) 發送 GET 請求至 /orders?customerName=查詢條件]
+    |
+    v
+[後端回傳符合條件的訂單資料]
+    |
+    v
+[前端 (app.js) 顯示查詢結果]
+    |
+    v
+[使用者點擊刪除按鈕]
+    |
+    v
+[前端 (app.js) 發送 DELETE 請求至 /orders/:id]
+    |
+    v
+[後端刪除指定的訂單]
 
-## Available Scripts
 
-In the project directory, you can run:
+##api
 
-### `npm start`
+1.新增訂單
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+URL： /orders
+方法： POST
+請求範例：
+json
+複製程式碼
+{
+  "customerName": "John Doe",
+  "items": [
+    { "name": "Apple", "quantity": 3, "price": 10 }
+  ],
+  "totalAmount": 30
+}
+回應範例：
+json
+複製程式碼
+{
+  "_id": "60d0fe4f5311236168a109ca",
+  "customerName": "John Doe",
+  "items": [
+    { "name": "Apple", "quantity": 3, "price": 10 }
+  ],
+  "totalAmount": 30,
+  "orderDate": "2025-01-09T10:15:30.000Z",
+  "status": "pending"
+}
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+2.查詢訂單
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+URL： /orders?customerName=John
+方法： GET
+回應範例：
+json
+複製程式碼
+[
+  {
+    "_id": "60d0fe4f5311236168a109ca",
+    "customerName": "John Doe",
+    "items": [
+      { "name": "Apple", "quantity": 3, "price": 10 }
+    ],
+    "totalAmount": 30,
+    "orderDate": "2025-01-09T10:15:30.000Z",
+    "status": "pending"
+  }
+]
 
-### `npm run build`
+3.刪除訂單
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+URL： /orders/:id
+方法： DELETE
+回應範例：
+json
+複製程式碼
+{
+  "message": "Order deleted successfully",
+  "orderId": "60d0fe4f5311236168a109ca"
+}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4.更新訂單狀態
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+URL： /orders/:id
+方法： PUT
+請求範例：
+json
+複製程式碼
+{
+  "status": "completed"
+}
+回應範例：
+json
+複製程式碼
+{
+  "_id": "60d0fe4f5311236168a109ca",
+  "customerName": "John Doe",
+  "items": [
+    { "name": "Apple", "quantity": 3, "price": 10 }
+  ],
+  "totalAmount": 30,
+  "orderDate": "2025-01-09T10:15:30.000Z",
+  "status": "completed"
+}
